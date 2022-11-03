@@ -26,7 +26,7 @@ void bsq(char *content, int h, int w)
         if (content[i] != '.')
             continue;
         tmp = square(content, i, h, w, 1);
-        if (tmp > max || (tmp == max && (i % w < pos % w))) {
+        if ((tmp > max) || (tmp == max && (i % (w + 1) < pos % (w + 1)))) {
             max = tmp;
             pos = i;
         }

@@ -28,7 +28,7 @@ static char *get_content(char *str, int size)
     int rd = 0;
     int tmp;
 
-    if (buffer == NULL) {
+    if (content == NULL) {
         DISP_err("BSQ: Not enougth memory to allocate.\n");
         return NULL;
     }
@@ -48,17 +48,17 @@ static char *get_content(char *str, int size)
     return content;
 }
 
-int start(int ac __attribute__((unused)), char **av __attribute__((unused)))
+int start_with_file(char *file)
 {
     char *content;
     char *tmp;
-    int size = get_size(av[1]);
+    int size = get_size(file);
     int height = 0;
     int width = 0;
 
     if (size == -1)
         return ER_FILE;
-    content = get_content(av[1], size);
+    content = get_content(file, size);
     if (content == NULL)
         return ERROR;
     tmp = content;
@@ -71,5 +71,30 @@ int start(int ac __attribute__((unused)), char **av __attribute__((unused)))
             ++height;
     bsq(content, height, width);
     free(tmp);
+    return SUCCESS;
+}
+
+int start_with_pattern(int size, char *pattern)
+{
+    int i = 0;
+    int j = 0;
+    int content_size = size * size;
+    int pattern_size = STR_len(pattern);
+    char *content = malloc(sizeof(char) * (content_size + size + 1));
+
+    if (content == NULL) {
+        DISP_err("BSQ: Not enougth memory to allocate.\n");
+        return ERROR;
+    }
+    while (i < content_size + size) {
+        content[i++] = pattern[j++];
+        if (j == pattern_size)
+            j = 0;
+        if (i != 0 && (i + 1) % (size + 1) == 0)
+            content[i++] = '\n';
+    }
+    content[i] = '\0';
+    bsq(content, size, size);
+    free(content);
     return SUCCESS;
 }
