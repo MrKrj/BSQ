@@ -16,7 +16,7 @@ CC		=	gcc
 LFLAGS	+=	-L./lib/ -lll -lstr -ldisp
 CFLAGS	+=	-O3 -Wall $(INC) -Wextra
 INC		=	-I./include
-NAME	=	BSQ
+NAME	=	bsq
 OBJ		=	$(SRC:.c=.o)
 
 all:		$(NAME)

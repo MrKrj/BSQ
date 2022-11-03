@@ -9,7 +9,8 @@ static int help(void)
     DISP_str("\n\t\t\t--- HELP ---\n\n");
     DISP_str("\tThe purpose of this program is to find the most\n\tsquare possible in a two dimensional map.\n");
     DISP_str("\t./BSQ <file>\n");
-    DISP_str("\t./BSQ <size> <pattern>\n\n");
+    DISP_str("\t./BSQ <size> <pattern>\n");
+    DISP_str("\t<pattern> must be composed of '.' and 'o'.\n\n");
     return SUCCESS;
 }
 
@@ -17,6 +18,7 @@ static int show_params(void)
 {
     DISP_err("./BSQ <file>\n");
     DISP_err("./BSQ <size> <pattern>\n");
+    DISP_str("<pattern> must be composed of '.' and 'o'.\n");
     return ER_ARGS;
 }
 
