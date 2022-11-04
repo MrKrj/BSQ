@@ -15,7 +15,8 @@ CYAN	=	\033[36;1m
 WHITE	=	\033[0m
 
 SRC		=	src/main.c				\
-			src/start.c				\
+			src/start_file.c		\
+			src/start_gen.c			\
 			src/bsq.c				\
 			src/utils.c				\
 			src/disp.c				\

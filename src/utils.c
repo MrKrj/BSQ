@@ -37,7 +37,7 @@ int str_getnbr(char *str)
     int sign = 1;
     int nb = 0;
 
-    for (int i = 0; str[i] != '\0'; ++i) {
+    for (int i = 0; str[i] != '\0' && str[i] != '\n'; ++i) {
         while (!is_num(str[i]))
             ++i;
         if (str[i] == '-' || str[i] == '+') {

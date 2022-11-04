@@ -12,7 +12,7 @@
 #include "functions.h"
 #include "macro.h"
 
-int get_size(char *file)
+static int get_size(const char *file)
 {
     stat_t s;
 
@@ -39,7 +39,7 @@ static void read_fd(char *content, int fd, int size)
     content[size] = '\0';
 }
 
-static char *get_content(char *str, int size)
+static char *get_content(const char *str, int size)
 {
     int fd = open(str, O_RDONLY);
     char *content;
@@ -59,50 +59,48 @@ static char *get_content(char *str, int size)
     return (content);
 }
 
-int start_with_file(char *file)
+static int get_params(len_t *len, char *content, int nb)
+{
+    for (; content[len->width] != '\n'; len->width++);
+    for (int i = 0; content[i] != '\0'; ++i) {
+        if (content[i] != '.' && content[i] != 'o' && content[i] != '\n') {
+            disp_err("BSQ: Forbidden character.\n");
+            return (ERROR);
+        }
+        if ((content[i] == '\n') && ((len->height == 0 && i != len->width)
+            || (len->height > 0 && (i + 1) % (len->width + 1) != 0))) {
+            disp_err("BSQ: Unmatched line size.\n");
+            return (ERROR);
+        }
+        if (content[i] == '\n')
+            len->height++;
+    }
+    if (nb == len->height)
+        return (SUCCESS);
+    disp_err("BSQ: Number of line doesn't match.\n");
+    return (ERROR);
+}
+
+int start_with_file(const char *file)
 {
     char *content;
     char *tmp;
+    int nb;
     len_t len = {0, 0, get_size(file)};
 
-    if (len.size == -1)
+    if (len.size == -1 || len.size == 0)
         return (ERROR);
     content = get_content(file, len.size);
     if (content == NULL)
         return (ERROR);
+    nb = str_getnbr(content);
     tmp = content;
     while (content[0] != '\n')
         ++content;
     ++content;
-    for (; content[len.width] != '\n'; ++len.width);
-    for (int i = 0; content[i] != '\0'; ++i)
-        if (content[i] == '\n')
-            ++len.height;
+    if (get_params(&len, content, nb) == ERROR)
+        return (ERROR);
     bsq(content, len.height, len.width);
     free(tmp);
-    return (SUCCESS);
-}
-
-int start_with_pattern(int size, char *pattern)
-{
-    int i = 0;
-    int j = 0;
-    int content_size = size * size;
-    int pattern_size = str_len(pattern);
-    char *content = malloc(sizeof(char) * (content_size + size + 1));
-
-    if (content == NULL) {
-        disp_err("BSQ: Not enougth memory to allocate.\n");
-        return (ERROR);
-    }
-    while (i < content_size + size) {
-        content[i++] = pattern[j++];
-        j = j == pattern_size ? 0 : j;
-        if (i != 0 && (i + 1) % (size + 1) == 0)
-            content[i++] = '\n';
-    }
-    content[i] = '\0';
-    bsq(content, size, size);
-    free(content);
     return (SUCCESS);
 }

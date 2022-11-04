@@ -11,10 +11,9 @@
     #include <stdbool.h>
 
 /* Project */
-int start_with_file(char *);
-int start_with_pattern(int, char *);
+int start_with_file(const char *);
+int start_with_pattern(int, const char *);
 void bsq(char  *, int, int);
-int get_size(char *);
 
 /* Utils */
 int str_len(const char *);
